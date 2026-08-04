@@ -11,7 +11,6 @@ interface LayoutProps {
   typewriter?: boolean;
 }
 const { title = 'Anoushka — Portfolio', description = 'A scrapbook portfolio of creative and technical projects.', clean = false, typewriter = false } = Astro.props as LayoutProps;
-const year = new Date().getFullYear();
 const bodyClass = [clean ? 'clean' : null, typewriter ? 'typewriter' : null].filter(Boolean).join(' ');
 ---
 
@@ -21,7 +20,7 @@ const bodyClass = [clean ? 'clean' : null, typewriter ? 'typewriter' : null].fil
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/png" href={withBase('/uploads/stickers/sticker6-flower-pink.png')} />
+    <link rel="icon" type="image/png" href={withBase('/uploads/stickers/sticker4-star.png')} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -37,13 +36,13 @@ const bodyClass = [clean ? 'clean' : null, typewriter ? 'typewriter' : null].fil
       <a class="brand" href={withBase('/')}>
         <img
           class="brand-sticker"
-          src={withBase('/uploads/stickers/sticker6-flower-pink.png')}
+          src={withBase('/uploads/stickers/sticker4-star.png')}
           alt=""
         />
         <span class="brand-name">anoushka</span>
       </a>
       <nav aria-label="Main">
-        <a href={withBase('/#work')}>work</a>
+        <a href={withBase('/#work')}>home</a>
         <a href={withBase('/about')}>about</a>
         <a href={withBase('/contact')}>contact</a>
         <a href={withBase('/fun')}>the sticker wall</a>
@@ -63,7 +62,7 @@ const bodyClass = [clean ? 'clean' : null, typewriter ? 'typewriter' : null].fil
           <span aria-hidden="true">·</span>
           <a href="https://www.linkedin.com/in/anoushka-pant-6b2b07292" target="_blank" rel="noopener">linkedin</a>
         </span>
-        <span class="footer-year">© {year}</span>
+        <span class="footer-year">anoushkap.pant@2026</span>
       </p>
     </footer>
   </body>
