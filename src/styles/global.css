@@ -123,6 +123,43 @@ a {
 .site-nav nav a:hover {
   border-bottom-color: var(--accent);
 }
+.site-nav nav a.nav-wall {
+  color: var(--accent);
+  position: relative;
+}
+.site-nav nav a.nav-wall::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 170%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle, rgba(255, 215, 130, 0.95) 0 1.5px, transparent 1.6px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 1px, transparent 1.1px),
+    radial-gradient(circle, rgba(226, 124, 130, 0.9) 0 1.5px, transparent 1.6px);
+  background-size: 20px 20px, 13px 13px, 26px 26px;
+  background-position: 0 0, 7px 10px, 4px 3px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.site-nav nav a.nav-wall:hover::after {
+  opacity: 1;
+  animation: nav-glitter 0.8s infinite ease-in-out;
+}
+@keyframes nav-glitter {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+}
 .site-footer {
   position: relative;
   margin-top: 4rem;
