@@ -201,6 +201,42 @@ main {
 }
 
 /* ---------- hero ---------- */
+.sticker-border {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+.sticker-col {
+  position: absolute;
+  top: 3%;
+  bottom: 3%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.sticker-col.col-left {
+  left: clamp(4px, 1.2vw, 18px);
+}
+.sticker-col.col-right {
+  right: clamp(4px, 1.2vw, 18px);
+}
+.sticker-col img {
+  width: clamp(30px, 4vw, 58px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 3px 3px rgba(45, 42, 38, 0.22));
+  transform: rotate(-6deg);
+}
+.sticker-col img:nth-child(even) {
+  transform: rotate(5deg);
+}
+@media (max-width: 720px) {
+  .sticker-border {
+    display: none;
+  }
+}
 .hero {
   position: relative;
   display: flex;

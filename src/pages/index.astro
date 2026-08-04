@@ -11,6 +11,20 @@ const rest = await getNonFeatured();
 
 const pastel = ['#f9d5d3', '#d9e8d5', '#f7e6c4', '#d5e4f0', '#ecd9e8', '#d5ecec', '#f2dcd1'];
 
+const leftCol = [
+  '/uploads/stickers/sticker1-cat.png',
+  '/uploads/stickers/sticker3-flower.png',
+  '/uploads/stickers/sticker8-strawberry.png',
+  '/uploads/stickers/sticker5-catbread.png',
+];
+
+const rightCol = [
+  '/uploads/stickers/sticker4-star.png',
+  '/uploads/stickers/sticker2-cat.png',
+  '/uploads/stickers/sticker7-star-button.png',
+  '/uploads/stickers/sticker6-flower-pink.png',
+];
+
 const pastelIcons = [
   '/uploads/stickers/sticker1-cat.png',
   '/uploads/stickers/sticker2-cat.png',
@@ -28,6 +42,19 @@ let iconIndex = 0;
   description="Anoushka — a Computer Science student at the Hong Kong Polytechnic University."
   typewriter
 >
+  <div class="sticker-border" aria-hidden="true">
+    <div class="sticker-col col-left">
+      {leftCol.map((src) => (
+        <img src={withBase(src)} alt="" loading="lazy" />
+      ))}
+    </div>
+    <div class="sticker-col col-right">
+      {rightCol.map((src) => (
+        <img src={withBase(src)} alt="" loading="lazy" />
+      ))}
+    </div>
+  </div>
+
   <section class="hero">
     <div class="hero-text">
       <h1>Hi I am <span>Anoushka</span></h1>
