@@ -116,9 +116,10 @@ let iconIndex = 0;
     )
   }
 
+  <h2 class="section-heading" id="work" style="margin-top: 2.6rem;">projects</h2>
   <FilterBar />
 
-  <section class="project-grid" id="work" aria-label="Projects">
+  <section class="project-grid" aria-label="Projects">
     {
       rest.map((project, i) => {
         const hasPdf = project.data.pdfs.length > 0;
