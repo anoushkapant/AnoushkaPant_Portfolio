@@ -180,6 +180,11 @@ body.home main {
   max-width: 1280px;
   padding-inline: clamp(6rem, 8vw, 8rem);
 }
+.projects-divider {
+  border-top: 3px dotted rgba(226, 124, 130, 0.45);
+  max-width: 280px;
+  margin: 2.6rem auto 1.4rem;
+}
 
 /* ---------- glitter ---------- */
 .glitter {
