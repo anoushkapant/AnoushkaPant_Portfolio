@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Polaroid from '../components/Polaroid.astro';
+import { withBase } from '../lib/paths';
 ---
 
 <Base
@@ -10,14 +11,19 @@ import Polaroid from '../components/Polaroid.astro';
 >
   <section class="page-intro">
     <h1>about me</h1>
-    <p>Half hands-in-ink, half hands-in-terminals.</p>
+    <p>just a potato who like to draw and code</p>
+    <nav class="page-links" aria-label="On this page">
+      <a href="#education">education</a>
+      <a href="#skills">skills</a>
+      <a href="#experience">experience</a>
+    </nav>
   </section>
 
   <div class="about-grid">
     <div class="about-photo">
       <Polaroid
         src="/uploads/photos/portrait.jpg"
-        caption="me, probably covered in ink"
+        caption="just me"
         tilt={2}
         tape
       />
@@ -34,42 +40,58 @@ import Polaroid from '../components/Polaroid.astro';
         that's a hand-painted fan piece or a React interface for real-time
         health data.
       </p>
-      <p>
+      <p id="education">
         <strong style="font-family: var(--font-hand);">education</strong><br />
         B.Sc. (Hons) Computer Science, Minor in Information Security — The Hong
-        Kong Polytechnic University <em>(Expected Graduation: June 2027)</em>
+        Kong Polytechnic University
+        <em style="display: block;">(Expected Graduation: June 2027)</em>
       </p>
     </div>
   </div>
 
-  <div class="skills">
-    <div class="skill-box creative">
-      <h3>🎨 creative</h3>
-      <ul>
-        <li>illustration & fan art</li>
-        <li>graphic design</li>
-        <li>editorial layout</li>
-        <li>visual branding</li>
-        <li>UI/UX design</li>
-        <li>Figma</li>
-      </ul>
-    </div>
-    <div class="skill-box technical">
-      <h3>⚙️ technical</h3>
-      <ul>
-        <li>python</li>
-        <li>java</li>
-        <li>typescript</li>
-        <li>react</li>
-        <li>sql / oracle</li>
-        <li>rest apis</li>
-        <li>neural networks</li>
-        <li>knime</li>
-      </ul>
+  <div class="skills-wrap">
+    <h2 class="section-heading" id="skills">skills</h2>
+    <div class="skills">
+      <div class="skill-box creative">
+        <img
+          class="skill-sticker"
+          src={withBase('/uploads/stickers/sticker3-flower.png')}
+          alt=""
+          loading="lazy"
+        />
+        <h3>creative</h3>
+        <ul>
+          <li>illustration & fan art</li>
+          <li>graphic design</li>
+          <li>editorial layout</li>
+          <li>visual branding</li>
+          <li>UI/UX design</li>
+          <li>Figma</li>
+        </ul>
+      </div>
+      <div class="skill-box technical">
+        <img
+          class="skill-sticker"
+          src={withBase('/uploads/stickers/sticker7-star-button.png')}
+          alt=""
+          loading="lazy"
+        />
+        <h3>technical</h3>
+        <ul>
+          <li>python</li>
+          <li>java</li>
+          <li>typescript</li>
+          <li>react</li>
+          <li>sql / oracle</li>
+          <li>rest apis</li>
+          <li>neural networks</li>
+          <li>knime</li>
+        </ul>
+      </div>
     </div>
   </div>
 
-  <section class="experience">
+  <section class="experience" id="experience">
     <h2 class="experience-heading">experience & roles</h2>
 
     <div class="exp-card">

@@ -10,15 +10,17 @@ const featured = await getFeatured();
 const rest = await getNonFeatured();
 
 const heroStickers = [
-  { src: '/uploads/stickers/sticker1-cat.png', corner: true, style: { top: '-10px', left: '-8px', width: '90px', transform: 'rotate(-10deg)' } },
-  { src: '/uploads/stickers/sticker2-cat.png', corner: true, style: { top: '-12px', right: '2%', width: '80px', transform: 'rotate(8deg)' } },
-  { src: '/uploads/stickers/sticker3-flower.png', mid: true, style: { bottom: '24%', left: '-10px', width: '76px', transform: 'rotate(-6deg)' } },
-  { src: '/uploads/stickers/sticker4-star.png', mid: true, style: { top: '44%', left: '-6px', width: '62px', transform: 'rotate(12deg)' } },
-  { src: '/uploads/stickers/sticker5-catbread.png', corner: true, style: { bottom: '-10px', right: '14%', width: '82px', transform: 'rotate(4deg)' } },
-  { src: '/uploads/stickers/sticker6-flower-pink.png', mid: true, style: { bottom: '46%', right: '-10px', width: '58px', transform: 'rotate(-9deg)' } },
-  { src: '/uploads/stickers/sticker7-star-button.png', mid: true, style: { top: '4%', left: '17%', width: '54px', transform: 'rotate(16deg)' } },
-  { src: '/uploads/stickers/sticker8-strawberry.png', mid: true, style: { bottom: '5%', left: '21%', width: '56px', transform: 'rotate(-14deg)' } },
+  { src: '/uploads/stickers/sticker1-cat.png', style: { top: '6%', left: '3%', width: '84px', transform: 'rotate(-10deg)' } },
+  { src: '/uploads/stickers/sticker2-cat.png', style: { top: '7%', right: '4%', width: '76px', transform: 'rotate(8deg)' } },
+  { src: '/uploads/stickers/sticker3-flower.png', mid: true, style: { bottom: '18%', left: '4%', width: '68px', transform: 'rotate(-6deg)' } },
+  { src: '/uploads/stickers/sticker4-star.png', mid: true, style: { top: '38%', left: '3%', width: '56px', transform: 'rotate(12deg)' } },
+  { src: '/uploads/stickers/sticker5-catbread.png', style: { bottom: '4%', right: '13%', width: '78px', transform: 'rotate(4deg)' } },
+  { src: '/uploads/stickers/sticker6-flower-pink.png', mid: true, style: { bottom: '40%', right: '4%', width: '54px', transform: 'rotate(-9deg)' } },
+  { src: '/uploads/stickers/sticker7-star-button.png', mid: true, style: { top: '30%', right: '6%', width: '50px', transform: 'rotate(16deg)' } },
+  { src: '/uploads/stickers/sticker8-strawberry.png', mid: true, style: { bottom: '12%', left: '28%', width: '54px', transform: 'rotate(-14deg)' } },
 ];
+
+const pastel = ['#f9d5d3', '#d9e8d5', '#f7e6c4', '#d5e4f0', '#ecd9e8', '#d5ecec', '#f2dcd1'];
 ---
 
 <Base
@@ -31,7 +33,6 @@ const heroStickers = [
       {heroStickers.map((s) => (
         <span
           class="s"
-          data-corner={s.corner ? '' : undefined}
           data-mid={s.mid ? '' : undefined}
           style={s.style}
         >
@@ -43,11 +44,11 @@ const heroStickers = [
     <div class="hero-text">
       <h1>Hi I am <span>Anoushka</span></h1>
       <p>
-        a Computer Science student at the Hong Kong Polytechnic University —
-        making zines and software, one scrapbook page at a time.
+        a Computer Science student at the Hong Kong Polytechnic University<br />
+        just a potato who like to draw and code
       </p>
       <p class="hero-note">
-        scroll for the work ↓
+        <a href={withBase('/#work')}>scroll for the work ↓</a>
       </p>
     </div>
 
@@ -86,7 +87,7 @@ const heroStickers = [
 
   <FilterBar />
 
-  <section class="project-grid" aria-label="Projects">
+  <section class="project-grid" id="work" aria-label="Projects">
     {
       rest.map((project, i) => {
         const hasPdf = project.data.pdfs.length > 0;
@@ -94,6 +95,7 @@ const heroStickers = [
           <div class="project-card" data-project-type={project.data.type}>
             <Polaroid
               src={project.data.images[0]}
+              color={pastel[i % pastel.length]}
               alt={project.data.summary}
               caption={project.data.title}
               sub={formatDate(project.data.date)}
