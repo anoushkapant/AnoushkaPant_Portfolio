@@ -1,0 +1,92 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Polaroid from '../../components/Polaroid.astro';
+import PdfEmbed from '../../components/PdfEmbed.astro';
+import { getAllProjects, formatDate } from '../../lib/entries';
+
+export const getStaticPaths = (async () => {
+  const all = await getAllProjects();
+  return all.map((project, index) => ({
+    params: { slug: project.id },
+    props: {
+      project,
+      prev: all[(index - 1 + all.length) % all.length],
+      next: all[(index + 1) % all.length],
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { project, next, prev } = Astro.props as Props;
+const { data } = project;
+const { title, type, date, tags, summary, images, pdfs, liveUrl, githubUrl } = data;
+const { Content } = await render(project);
+---
+
+<Base
+  title={`${title} — Anoushka`}
+  description={summary}
+  clean
+>
+  <article class="detail">
+    <p style="margin:0;">
+      <a href="/" style="font-family: var(--font-caption); font-size: 1.2rem;">← back to the scrapbook</a>
+    </p>
+
+    <span class={`type-badge ${type}`}>{type}</span>
+    <h1>{title}</h1>
+    <div class="detail-meta">
+      <time datetime={date.toISOString()}>{formatDate(date)}</time>
+      {tags.map((t) => <span class="tag-pill">{t}</span>)}
+    </div>
+
+    {
+      images.length > 0 && (
+        <div class="detail-hero">
+          <img src={images[0]} alt={title} />
+        </div>
+      )
+    }
+
+    <p style="font-family: var(--font-caption); font-size: 1.45rem; color: var(--ink-soft); margin-top: 0;">
+      {summary}
+    </p>
+
+    <div class="detail-links">
+      {liveUrl && <a class="btn btn-primary" href={liveUrl} target="_blank" rel="noopener">🚀 live demo</a>}
+      {githubUrl && <a class="btn" href={githubUrl} target="_blank" rel="noopener">⟨⟩ source code</a>}
+    </div>
+
+    <div class="detail-body">
+      <Content />
+    </div>
+
+    {
+      images.length > 1 && (
+        <div class="detail-gallery" aria-label="More photos">
+          {images.slice(1).map((src) => (
+            <Polaroid src={src} caption={title} tilt={1} />
+          ))}
+        </div>
+      )
+    }
+
+    {pdfs.map((url) => <PdfEmbed url={url} />)}
+
+    <nav class="prev-next" aria-label="Projects">
+      {
+        prev && (
+          <a href={`/projects/${prev.id}`} class="prev">← {prev.data.title}</a>
+        )
+      }
+      {
+        next && (
+          <a href={`/projects/${next.id}`} class="next">{next.data.title} →</a>
+        )
+      }
+    </nav>
+  </article>
+</Base>

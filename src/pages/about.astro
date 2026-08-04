@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import Polaroid from '../components/Polaroid.astro';
+---
+
+<Base
+  title="About — Anoushka"
+  description="About Anoushka — a maker of zines and software."
+>
+  <section class="page-intro">
+    <h1>about me</h1>
+    <p>Half hands-in-ink, half hands-in-terminals.</p>
+  </section>
+
+  <div class="about-grid">
+    <div class="about-photo">
+      <Polaroid
+        src="/uploads/photos/portrait.jpg"
+        caption="me, probably covered in ink"
+        tilt={2}
+        tape
+      />
+    </div>
+    <div>
+      <p>
+        I make things that live at the intersection of craft and computation —
+        illustrated zines and risograph prints on one shelf, tools and software
+        on the other. I care about process, details, and making work that feels
+        human.
+      </p>
+      <p>
+        When I'm not making, I'm collecting: coasters, type specimens, and the
+        occasional broken keyboard.
+      </p>
+    </div>
+  </div>
+
+  <div class="skills">
+    <div class="skill-box creative">
+      <h3>🎨 creative</h3>
+      <ul>
+        <li>illustration</li>
+        <li>zines & risograph</li>
+        <li>hand-lettering</li>
+        <li>editorial design</li>
+        <li>photography</li>
+        <li>printmaking</li>
+      </ul>
+    </div>
+    <div class="skill-box technical">
+      <h3>⚙️ technical</h3>
+      <ul>
+        <li>typescript</li>
+        <li>react</li>
+        <li>node</li>
+        <li>css & layout</li>
+        <li>static sites</li>
+        <li>git</li>
+      </ul>
+    </div>
+  </div>
+</Base>

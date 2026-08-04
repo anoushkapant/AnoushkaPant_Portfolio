@@ -1,0 +1,12 @@
+---
+interface Props {
+  url: string;
+  label?: string;
+}
+const { url, label = 'PDF inside' } = Astro.props;
+---
+
+<a class="pdf-stamp" href={url} target="_blank" rel="noopener">
+  <span class="pdf-emoji" aria-hidden="true">📄</span>
+  {label}
+</a>

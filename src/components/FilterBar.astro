@@ -1,0 +1,37 @@
+---
+const filters = ['all', 'creative', 'technical'] as const;
+---
+
+<div class="filter-bar" data-filter-bar>
+  {
+    filters.map((f) => (
+      <button
+        class="filter-btn"
+        type="button"
+        data-filter={f}
+        aria-pressed={f === 'all' ? 'true' : 'false'}
+      >
+        {f === 'all' ? 'All' : f === 'creative' ? '🎨 Creative' : '⚙️ Technical'}
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-filter-bar]');
+  if (bar) {
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-project-type]'));
+    bar.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
+      if (!btn) return;
+      const value = btn.dataset.filter;
+      bar.querySelectorAll('.filter-btn').forEach((b) =>
+        b.setAttribute('aria-pressed', String(b === btn))
+      );
+      for (const card of cards) {
+        const show = value === 'all' || card.dataset.projectType === value;
+        card.hidden = !show;
+      }
+    });
+  }
+</script>

@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import FilterBar from '../components/FilterBar.astro';
+import Polaroid from '../components/Polaroid.astro';
+import PdfStamp from '../components/PdfStamp.astro';
+import { getFeatured, getNonFeatured, formatDate } from '../lib/entries';
+
+const featured = await getFeatured();
+const rest = await getNonFeatured();
+---
+
+<Base
+  title="Anoushka — Portfolio"
+  description="A scrapbook portfolio of creative and technical projects."
+>
+  <section class="page-intro">
+    <h1>hi, i'm <span>anoushka</span> ✶</h1>
+    <p>
+      A scrapbook of things I've made — zines and paintings on one side,
+      software and systems on the other. Flip through a card to read the story.
+    </p>
+  </section>
+
+  {
+    featured && (
+      <section class="featured-section">
+        <div class="featured-label">★ featured work ★</div>
+        <div class="featured-card">
+          <Polaroid
+            src={featured.data.images[0]}
+            alt={featured.data.summary}
+            caption={featured.data.title}
+            sub={formatDate(featured.data.date)}
+            tilt={1}
+            tape
+            href={`/projects/${featured.id}`}
+          />
+        </div>
+      </section>
+    )
+  }
+
+  <FilterBar />
+
+  <section class="project-grid" aria-label="Projects">
+    {
+      rest.map((project, i) => {
+        const hasPdf = project.data.pdfs.length > 0;
+        return (
+          <div class="project-card" data-project-type={project.data.type}>
+            <Polaroid
+              src={project.data.images[0]}
+              alt={project.data.summary}
+              caption={project.data.title}
+              sub={formatDate(project.data.date)}
+              tilt={i % 6}
+              href={`/projects/${project.id}`}
+              tape={i % 3 === 0}
+            />
+            {hasPdf && (
+              <div style="text-align:center; margin-top:-0.6rem;">
+                <PdfStamp url={project.data.pdfs[0]} />
+              </div>
+            )}
+          </div>
+        );
+      })
+    }
+  </section>
+
+  <section class="fun-hero" style="margin-top: 1rem;">
+    <p>
+      psst — the <a href="/fun" style="font-family: var(--font-caption); font-size: 1.35rem;">sticker wall</a> is open. leave a sticker on your way out.
+    </p>
+  </section>
+</Base>

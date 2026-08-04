@@ -1,0 +1,37 @@
+---
+interface Props {
+  src?: string;
+  alt?: string;
+  caption: string;
+  sub?: string;
+  tilt?: number;
+  href?: string;
+  tape?: boolean;
+}
+const { src, alt = '', caption, sub, tilt = 1, href, tape = false } = Astro.props;
+const tiltClamp = ((tilt % 6) + 6) % 6 + 1;
+---
+
+{
+  href ? (
+    <a class="polaroid" href={href} data-tilt={tiltClamp}>
+      {tape && <span class="tape" data-pos="top-center"></span>}
+      <div class="polaroid-photo">
+        {src
+          ? <img src={src} alt={alt} loading="lazy" decoding="async" />
+          : <div class="placeholder"><span>your photo</span><span>goes here</span></div>}
+      </div>
+      <div class="polaroid-caption">{caption}{sub && <small>{sub}</small>}</div>
+    </a>
+  ) : (
+    <div class="polaroid" data-tilt={tiltClamp}>
+      {tape && <span class="tape" data-pos="top-center"></span>}
+      <div class="polaroid-photo">
+        {src
+          ? <img src={src} alt={alt} loading="lazy" decoding="async" />
+          : <div class="placeholder"><span>your photo</span><span>goes here</span></div>}
+      </div>
+      <div class="polaroid-caption">{caption}{sub && <small>{sub}</small>}</div>
+    </div>
+  )
+}

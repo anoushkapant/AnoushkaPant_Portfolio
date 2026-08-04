@@ -1,0 +1,292 @@
+---
+export const TRAY_EMOJI = ['⭐', '🌻', '💙', '🐌', '🌷', '🔥', '🪩', '🍄', '✏️', '💡'];
+export const MAX_STICKERS = 100;
+export const MIN_PLACE_INTERVAL_MS = 5000;
+---
+
+<div class="fun-wall" data-fun-wall>
+  <div class="sticker-stage" data-stage>
+    <div class="empty-hint" data-empty-hint>
+      <span>the wall is blank…</span>
+      <span>pick a sticker below and stick it anywhere 🪩</span>
+    </div>
+  </div>
+  <p class="status-line" data-status aria-live="polite"></p>
+  <div class="sticker-tray" data-tray aria-label="Sticker tray">
+    <span class="tray-label">grab one ↓</span>
+    {
+      TRAY_EMOJI.map((emoji) => (
+        <button
+          class="tray-sticker"
+          type="button"
+          data-tray-sticker={emoji}
+          aria-label={`Sticker ${emoji}`}
+        >{emoji}</button>
+      ))
+    }
+  </div>
+  <div class="admin-bar">
+    <a href="/admin/stickers">manage the wall</a>
+  </div>
+</div>
+
+<script>
+  import { getSupabase, MAX_STICKERS, MIN_PLACE_INTERVAL_MS } from '../lib/stickers.ts';
+  import type { Sticker } from '../lib/stickers.ts';
+
+  interface LocalSticker extends Sticker {
+    local?: boolean;
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-fun-wall]');
+  if (!root) throw new Error('sticker wall missing');
+  const stage = root.querySelector<HTMLElement>('[data-stage]')!;
+  const emptyHint = root.querySelector<HTMLElement>('[data-empty-hint]')!;
+  const status = root.querySelector<HTMLElement>('[data-status]')!;
+  const tray = root.querySelector<HTMLElement>('[data-tray]')!;
+
+  const supabase = getSupabase();
+  const LOCAL_KEY = 'scrapbook:local-stickers';
+  let stickers: LocalSticker[] = [];
+  let lastPlace = 0;
+
+  const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+  const randRot = () => Math.round((Math.random() * 2 - 1) * 18);
+
+  async function loadStickers() {
+    if (!supabase) {
+      try {
+        const raw = localStorage.getItem(LOCAL_KEY);
+        stickers = raw ? (JSON.parse(raw) as LocalSticker[]) : [];
+      } catch {
+        stickers = [];
+      }
+      render();
+      return;
+    }
+    const { data } = await supabase
+      .from('stickers')
+      .select('*')
+      .order('created_at', { ascending: true })
+      .limit(MAX_STICKERS);
+    stickers = (data ?? []) as Sticker[];
+    render();
+  }
+
+  function persistLocal() {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(stickers));
+  }
+
+  function render() {
+    stage.querySelectorAll('.sticker').forEach((el) => el.remove());
+    for (const s of stickers) {
+      const el = document.createElement('div');
+      el.className = 'sticker';
+      el.dataset.id = String(s.id);
+      el.textContent = s.emoji;
+      el.style.left = `${s.x}%`;
+      el.style.top = `${s.y}%`;
+      el.style.transform = `translate(-50%, -50%) rotate(${s.rotation}deg)`;
+      el.setAttribute('aria-label', `Sticker ${s.emoji}`);
+      stage.appendChild(el);
+      attachStickerDrag(el, s);
+    }
+    emptyHint.hidden = stickers.length > 0;
+  }
+
+  function posFromEvent(ev: PointerEvent): { x: number; y: number } {
+    const rect = stage.getBoundingClientRect();
+    return {
+      x: clamp(((ev.clientX - rect.left) / rect.width) * 100, 3, 97),
+      y: clamp(((ev.clientY - rect.top) / rect.height) * 100, 3, 97),
+    };
+  }
+
+  async function place(emoji: string, x: number, y: number) {
+    if (Date.now() - lastPlace < MIN_PLACE_INTERVAL_MS) {
+      setStatus('slow down — one sticker every few seconds');
+      return null;
+    }
+    if (stickers.length >= MAX_STICKERS) {
+      setStatus('the wall is full for now — move a sticker instead 🪩');
+      return null;
+    }
+    lastPlace = Date.now();
+    const rotation = randRot();
+
+    if (!supabase) {
+      const s: LocalSticker = {
+        id: Date.now(),
+        emoji,
+        x,
+        y,
+        rotation,
+        created_at: new Date().toISOString(),
+        local: true,
+      };
+      stickers.push(s);
+      persistLocal();
+      render();
+      setStatus('stuck it (local demo — connect Supabase to share it)');
+      return s;
+    }
+
+    setStatus('sticking…');
+    const { data, error } = await supabase
+      .from('stickers')
+      .insert({ emoji, x, y, rotation })
+      .select()
+      .single();
+    if (error) {
+      setStatus(`couldn't stick it: ${error.message}`);
+      return null;
+    }
+    if (data && !stickers.some((s) => s.id === data.id)) {
+      stickers.push(data as Sticker);
+      render();
+    }
+    setStatus(`stuck ${emoji} on the wall`);
+    return data;
+  }
+
+  async function move(s: LocalSticker, x: number, y: number) {
+    if (s.local || !supabase) {
+      s.x = x;
+      s.y = y;
+      persistLocal();
+      render();
+      return;
+    }
+    const { error } = await supabase.from('stickers').update({ x, y }).eq('id', s.id);
+    if (error) setStatus(`couldn't move: ${error.message}`);
+    else {
+      s.x = x;
+      s.y = y;
+      render();
+    }
+  }
+
+  function attachStickerDrag(el: HTMLElement, s: LocalSticker) {
+    let dragging = false;
+    el.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      dragging = true;
+      el.classList.add('dragging');
+      el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const { x, y } = posFromEvent(e);
+      el.style.left = `${x}%`;
+      el.style.top = `${y}%`;
+      s.x = x;
+      s.y = y;
+    });
+    el.addEventListener('pointerup', (e) => {
+      if (!dragging) return;
+      dragging = false;
+      el.classList.remove('dragging');
+      const { x, y } = posFromEvent(e);
+      void move(s, x, y);
+    });
+  }
+
+  function attachTrayDrag() {
+    tray.querySelectorAll<HTMLElement>('[data-tray-sticker]').forEach((btn) => {
+      const emoji = btn.dataset.traySticker!;
+      let ghost: HTMLElement | null = null;
+      let armed = false;
+
+      btn.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0) return;
+        e.preventDefault();
+        armed = true;
+        btn.setPointerCapture(e.pointerId);
+        ghost = document.createElement('div');
+        ghost.className = 'sticker dragging';
+        ghost.textContent = emoji;
+        ghost.style.left = `${e.clientX}px`;
+        ghost.style.top = `${e.clientY}px`;
+        ghost.style.position = 'fixed';
+        ghost.style.transform = 'translate(-50%, -50%) rotate(-4deg)';
+        ghost.style.pointerEvents = 'none';
+        ghost.style.fontSize = '3rem';
+        document.body.appendChild(ghost);
+      });
+      btn.addEventListener('pointermove', (e) => {
+        if (!armed || !ghost) return;
+        ghost.style.left = `${e.clientX}px`;
+        ghost.style.top = `${e.clientY}px`;
+      });
+      btn.addEventListener('pointerup', (e) => {
+        if (!armed) return;
+        armed = false;
+        ghost?.remove();
+        ghost = null;
+        const rect = stage.getBoundingClientRect();
+        const inside =
+          e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+        if (inside) {
+          const { x, y } = posFromEvent(e);
+          void place(emoji, x, y);
+        }
+      });
+    });
+  }
+
+  let statusTimer: number | undefined;
+  function setStatus(msg: string) {
+    status.textContent = msg;
+    window.clearTimeout(statusTimer);
+    statusTimer = window.setTimeout(() => (status.textContent = ''), 3500);
+  }
+
+  async function listenRealtime() {
+    if (!supabase) return;
+    const channel = supabase
+      .channel('sticker-wall')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'stickers' },
+        (payload) => {
+          const row = payload.new as Sticker;
+          if (!stickers.some((s) => s.id === row.id)) {
+            stickers.push(row);
+            if (stickers.length > MAX_STICKERS) stickers.shift();
+            render();
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'stickers' },
+        (payload) => {
+          const id = (payload.old as Sticker).id;
+          stickers = stickers.filter((s) => s.id !== id);
+          render();
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'stickers' },
+        (payload) => {
+          const row = payload.new as Sticker;
+          const existing = stickers.find((s) => s.id === row.id);
+          if (existing) {
+            existing.x = row.x;
+            existing.y = row.y;
+            render();
+          }
+        }
+      )
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }
+
+  void loadStickers().then(() => {
+    attachTrayDrag();
+    void listenRealtime();
+  });
+</script>

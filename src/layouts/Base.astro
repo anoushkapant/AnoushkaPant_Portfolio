@@ -1,0 +1,55 @@
+---
+import '~/styles/global.css';
+import type { Props } from 'astro';
+
+interface LayoutProps {
+  title?: string;
+  description?: string;
+  clean?: boolean;
+}
+const { title = 'Anoushka — Portfolio', description = 'A scrapbook portfolio of creative and technical projects.', clean = false } = Astro.props as LayoutProps;
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪩</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Shantell+Sans:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body class:list={clean ? 'clean' : undefined}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-nav">
+      <a class="brand" href="/">
+        <span class="brand-name">anoushka.</span>
+        <span class="brand-tag">creative × technical</span>
+      </a>
+      <nav aria-label="Main">
+        <a href="/">work</a>
+        <a href="/about">about</a>
+        <a href="/contact">contact</a>
+        <a href="/fun">the sticker wall</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <span>made with paper, pixels &amp; washi tape</span>
+        <span class="footer-year">© {year}</span>
+      </p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+---
+interface Props {
+  position?: 'top-left' | 'top-right' | 'top-center';
+}
+const { position = 'top-center' } = Astro.props;
+---
+
+<span class="tape" data-pos={position} aria-hidden="true"></span>

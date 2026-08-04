@@ -1,0 +1,97 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="Manage the Wall — Anoushka"
+  description="Admin view for the sticker wall."
+>
+  <section class="page-intro">
+    <h1>manage the wall</h1>
+    <p>
+      This page is hidden on purpose. Open it with your private link:
+      <code style="word-break: break-all;">…/admin/stickers?token=YOUR_TOKEN</code>
+    </p>
+  </section>
+
+  <div class="sticker-stage" data-admin-stage style="min-height: 50vh;">
+    <div class="empty-hint" data-admin-hint>loading stickers…</div>
+  </div>
+  <p class="status-line" data-status aria-live="polite"></p>
+</Base>
+
+<script>
+  import { getSupabase, getAdminToken } from '../../lib/stickers.ts';
+  import type { Sticker } from '../../lib/stickers.ts';
+
+  const stage = document.querySelector<HTMLElement>('[data-admin-stage]')!;
+  const hint = document.querySelector<HTMLElement>('[data-admin-hint]')!;
+  const status = document.querySelector<HTMLElement>('[data-status]')!;
+  const params = new URLSearchParams(window.location.search);
+  const supplied = params.get('token') ?? '';
+  const expected = getAdminToken();
+  let supabase = getSupabase();
+
+  if (!expected) {
+    hint.hidden = false;
+    hint.innerHTML = 'no admin token configured.<br>Set PUBLIC_STICKER_ADMIN_TOKEN and rebuild.';
+    status.textContent = '';
+  } else if (supplied !== expected) {
+    hint.hidden = false;
+    hint.innerHTML = 'wrong or missing token.<br>Use the private link: /admin/stickers?token=…';
+    status.textContent = '';
+  } else if (!supabase) {
+    hint.hidden = false;
+    hint.innerHTML = 'Supabase keys not configured.<br>Add PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY.';
+  } else {
+    void loadAdmin();
+  }
+
+  async function loadAdmin() {
+    const { data } = await supabase!
+      .from('stickers')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(200);
+    const stickers = (data ?? []) as Sticker[];
+    renderAdmin(stickers);
+  }
+
+  function renderAdmin(stickers: Sticker[]) {
+    hint.hidden = stickers.length > 0;
+    if (stickers.length === 0) {
+      hint.hidden = false;
+      hint.innerHTML = 'the wall is empty.';
+      return;
+    }
+    for (const s of stickers) {
+      const el = document.createElement('button');
+      el.className = 'sticker';
+      el.title = `Click to delete (id ${s.id})`;
+      el.textContent = s.emoji;
+      el.style.left = `${s.x}%`;
+      el.style.top = `${s.y}%`;
+      el.style.transform = `translate(-50%, -50%) rotate(${s.rotation}deg)`;
+      el.addEventListener('click', () => void removeSticker(s.id, el));
+      stage.appendChild(el);
+    }
+  }
+
+  async function removeSticker(id: number, el: HTMLElement) {
+    if (!window.confirm(`Remove sticker ${el.textContent} (id ${id})?`)) return;
+    const { error } = await supabase!
+      .from('stickers')
+      .delete()
+      .eq('id', id);
+    if (error) {
+      status.textContent = `failed: ${error.message}`;
+      return;
+    }
+    el.remove();
+    status.textContent = `removed sticker ${id}`;
+    if (stage.querySelectorAll('.sticker').length === 0) {
+      hint.hidden = false;
+      hint.innerHTML = 'the wall is empty.';
+    }
+  }
+</script>
