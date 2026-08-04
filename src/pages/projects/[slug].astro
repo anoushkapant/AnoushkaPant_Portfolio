@@ -40,7 +40,7 @@ const { Content } = await render(project);
     <span class={`type-badge ${type}`}>{type}</span>
     <h1>{title}</h1>
     <div class="detail-meta">
-      <time datetime={date.toISOString()}>{formatDate(date)}</time>
+      {type !== 'creative' && <time datetime={date.toISOString()}>{formatDate(date)}</time>}
       {tags.map((t) => <span class="tag-pill">{t}</span>)}
     </div>
 

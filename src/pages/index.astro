@@ -136,7 +136,7 @@ let iconIndex = 0;
               icon={icon}
               alt={project.data.summary}
               caption={project.data.title}
-              sub={formatDate(project.data.date)}
+              sub={technical ? formatDate(project.data.date) : undefined}
               tilt={i % 6}
               href={`/projects/${project.id}`}
               tape={i % 3 === 0}
