@@ -3,7 +3,6 @@ import Base from '../layouts/Base.astro';
 import FilterBar from '../components/FilterBar.astro';
 import Polaroid from '../components/Polaroid.astro';
 import PdfStamp from '../components/PdfStamp.astro';
-import CuteSticker from '../components/CuteSticker.astro';
 import { withBase } from '../lib/paths';
 import { getFeatured, getNonFeatured, formatDate } from '../lib/entries';
 
@@ -11,12 +10,14 @@ const featured = await getFeatured();
 const rest = await getNonFeatured();
 
 const heroStickers = [
-  { name: 'cat', style: { top: '4%', left: '3%', width: '86px', transform: 'rotate(-14deg)' } },
-  { name: 'computer', style: { top: '8%', right: '5%', width: '92px', transform: 'rotate(10deg)' } },
-  { name: 'flower', style: { bottom: '16%', left: '7%', width: '82px', transform: 'rotate(-8deg)' } },
-  { name: 'cat2', style: { bottom: '5%', right: '9%', width: '80px', transform: 'rotate(6deg)' } },
-  { name: 'disk', style: { top: '40%', left: '-1%', width: '64px', transform: 'rotate(16deg)' } },
-  { name: 'flower2', style: { bottom: '38%', right: '1%', width: '60px', transform: 'rotate(-12deg)' } },
+  { src: '/uploads/stickers/sticker1-cat.png', style: { top: '3%', left: '2%', width: '92px', transform: 'rotate(-12deg)' } },
+  { src: '/uploads/stickers/sticker2-cat.png', style: { top: '6%', right: '4%', width: '84px', transform: 'rotate(9deg)' } },
+  { src: '/uploads/stickers/sticker3-flower.png', style: { bottom: '22%', left: '5%', width: '80px', transform: 'rotate(-7deg)' } },
+  { src: '/uploads/stickers/sticker4-star.png', style: { top: '38%', left: '-1%', width: '70px', transform: 'rotate(14deg)' } },
+  { src: '/uploads/stickers/sticker5-catbread.png', style: { bottom: '4%', right: '8%', width: '88px', transform: 'rotate(5deg)' } },
+  { src: '/uploads/stickers/sticker6-flower-pink.png', style: { bottom: '36%', right: '1%', width: '66px', transform: 'rotate(-10deg)' } },
+  { src: '/uploads/stickers/sticker7-star-button.png', style: { top: '66%', left: '12%', width: '58px', transform: 'rotate(18deg)' } },
+  { src: '/uploads/stickers/sticker8-strawberry.png', style: { bottom: '12%', left: '30%', width: '62px', transform: 'rotate(-16deg)' } },
 ];
 ---
 
@@ -29,7 +30,7 @@ const heroStickers = [
     <div class="scatter" aria-hidden="true">
       {heroStickers.map((s) => (
         <span class="s" style={s.style}>
-          <CuteSticker name={s.name} />
+          <img src={withBase(s.src)} alt="" />
         </span>
       ))}
     </div>

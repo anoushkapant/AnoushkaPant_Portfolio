@@ -151,8 +151,14 @@ main {
 .scatter .s {
   position: absolute;
   line-height: 1;
-  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.18));
-  opacity: 0.85;
+  opacity: 0.92;
+  pointer-events: none;
+}
+.scatter .s img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 3px 3px rgba(45, 42, 38, 0.22));
 }
 .hero-text {
   position: relative;
@@ -658,6 +664,51 @@ body.clean main {
 }
 .contact-options a:hover {
   border-bottom-color: var(--accent);
+}
+
+/* ---------- experience & roles ---------- */
+.experience {
+  margin: 2.4rem 0 1rem;
+}
+.experience-heading {
+  font-family: var(--font-hand);
+  font-size: 1.7rem;
+  text-align: center;
+  margin: 0 0 1.4rem;
+}
+.exp-card {
+  border: 2px dashed rgba(45, 42, 38, 0.2);
+  border-radius: var(--radius);
+  padding: 1rem 1.4rem;
+  margin-bottom: 1rem;
+  background: rgba(254, 253, 248, 0.6);
+}
+.exp-card h3 {
+  font-family: var(--font-hand);
+  font-size: 1.25rem;
+  margin: 0;
+}
+.exp-meta {
+  font-family: var(--font-caption);
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  margin: 0.15rem 0 0.6rem;
+}
+.exp-card ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+.exp-card li {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+}
+body.typewriter .exp-card li {
+  font-family: var(--font-type);
+}
+body.typewriter .exp-card h3 {
+  font-family: var(--font-type);
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 /* ---------- sticker wall ---------- */
