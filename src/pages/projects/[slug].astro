@@ -23,7 +23,7 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { project, next, prev } = Astro.props as Props;
 const { data } = project;
-const { title, type, date, tags, summary, images, pdfs, liveUrl, githubUrl } = data;
+const { title, type, tags, summary, images, pdfs, liveUrl, githubUrl } = data;
 const { Content } = await render(project);
 ---
 
