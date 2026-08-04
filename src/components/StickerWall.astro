@@ -60,7 +60,12 @@ const adminHref = withBase('/admin/stickers');
   const status = root.querySelector<HTMLElement>('[data-status]')!;
   const tray = root.querySelector<HTMLElement>('[data-tray]')!;
 
-  const supabase = getSupabase();
+  let supabase: ReturnType<typeof getSupabase> = null;
+  try {
+    supabase = getSupabase();
+  } catch {
+    supabase = null;
+  }
   const LOCAL_KEY = 'scrapbook:local-stickers-v2';
   let stickers: LocalSticker[] = [];
   let lastPlace = 0;
@@ -70,30 +75,35 @@ const adminHref = withBase('/admin/stickers');
   const isImage = (v: string) => v.startsWith('/') || v.startsWith('http');
   const isImageSticker = (s: Sticker) => isImage(s.emoji);
 
-  async function loadStickers() {
-    let local: LocalSticker[] = [];
+  function readLocal(): LocalSticker[] {
     try {
       const raw = localStorage.getItem(LOCAL_KEY);
-      local = raw ? (JSON.parse(raw) as LocalSticker[]) : [];
+      return raw ? ((JSON.parse(raw) as LocalSticker[]).map((s) => ({ ...s, local: true }))) : [];
     } catch {
-      local = [];
+      return [];
     }
-    local = local.map((s) => ({ ...s, local: true }));
+  }
 
-    if (!supabase) {
-      stickers = local.filter(isImageSticker);
-      render();
-      return;
+  async function loadStickers() {
+    const local = readLocal();
+    if (supabase) {
+      try {
+        const { data } = await supabase
+          .from('stickers')
+          .select('*')
+          .order('created_at', { ascending: true })
+          .limit(MAX_STICKERS);
+        const cloud = ((data ?? []) as Sticker[]).filter(isImageSticker);
+        const cloudIds = new Set(cloud.map((s) => s.id));
+        const keptLocal = local.filter((s) => !cloudIds.has(s.id));
+        stickers = [...keptLocal, ...cloud].slice(0, MAX_STICKERS);
+        render();
+        return;
+      } catch {
+        // cloud failed — fall through to local
+      }
     }
-    const { data } = await supabase
-      .from('stickers')
-      .select('*')
-      .order('created_at', { ascending: true })
-      .limit(MAX_STICKERS);
-    const cloud = ((data ?? []) as Sticker[]).filter(isImageSticker);
-    const cloudIds = new Set(cloud.map((s) => s.id));
-    const keptLocal = local.filter((s) => !cloudIds.has(s.id));
-    stickers = [...keptLocal, ...cloud];
+    stickers = local.filter(isImageSticker);
     render();
   }
 
@@ -362,8 +372,13 @@ const adminHref = withBase('/admin/stickers');
     };
   }
 
-  void loadStickers().then(() => {
-    attachTrayDrag();
-    void listenRealtime();
-  });
+  void loadStickers()
+    .catch(() => {
+      stickers = readLocal().filter(isImageSticker);
+      render();
+    })
+    .then(() => {
+      attachTrayDrag();
+      if (supabase) void listenRealtime();
+    });
 </script>
