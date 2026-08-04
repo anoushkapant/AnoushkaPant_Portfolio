@@ -938,7 +938,6 @@ body.typewriter .exp-card h3 {
   background-image:
     radial-gradient(rgba(45, 42, 38, 0.07) 1px, transparent 1px);
   background-size: 20px 20px;
-  touch-action: none;
 }
 .sticker-stage .empty-hint {
   position: absolute;
@@ -969,6 +968,7 @@ body.typewriter .exp-card h3 {
   background: transparent;
   padding: 0;
   font: inherit;
+  touch-action: none;
 }
 .sticker.img-sticker img {
   width: 68px;
@@ -1017,6 +1017,7 @@ body.typewriter .exp-card h3 {
   border-radius: 8px;
   line-height: 1;
   transition: transform 0.12s ease, background 0.12s ease;
+  touch-action: none;
 }
 .tray-sticker img {
   width: 38px;
