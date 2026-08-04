@@ -8,18 +8,51 @@ import { getFeatured, getNonFeatured, formatDate } from '../lib/entries';
 
 const featured = await getFeatured();
 const rest = await getNonFeatured();
+
+const heroStickers = [
+  { emoji: '🐈', style: { top: '6%', left: '4%', fontSize: '2.6rem', transform: 'rotate(-14deg)' } },
+  { emoji: '🖥️', style: { top: '10%', right: '6%', fontSize: '2.3rem', transform: 'rotate(10deg)' } },
+  { emoji: '🌸', style: { bottom: '18%', left: '8%', fontSize: '2rem', transform: 'rotate(-8deg)' } },
+  { emoji: '🐈⬛', style: { bottom: '6%', right: '10%', fontSize: '2.4rem', transform: 'rotate(6deg)' } },
+  { emoji: '💻', style: { top: '42%', left: '-1%', fontSize: '1.8rem', transform: 'rotate(16deg)' } },
+  { emoji: '🌼', style: { bottom: '40%', right: '2%', fontSize: '1.9rem', transform: 'rotate(-12deg)' } },
+  { emoji: '💾', style: { top: '70%', left: '14%', fontSize: '1.7rem', transform: 'rotate(-20deg)' } },
+];
 ---
 
 <Base
   title="Anoushka — Portfolio"
-  description="A scrapbook portfolio of creative and technical projects."
+  description="Anoushka — a Computer Science student at the Hong Kong Polytechnic University."
+  typewriter
 >
-  <section class="page-intro">
-    <h1>hi, i'm <span>anoushka</span> ✶</h1>
-    <p>
-      A scrapbook of things I've made — zines and paintings on one side,
-      software and systems on the other. Flip through a card to read the story.
-    </p>
+  <section class="hero">
+    <div class="scatter" aria-hidden="true">
+      {heroStickers.map((s) => <span class="s" style={s.style}>{s.emoji}</span>)}
+    </div>
+
+    <div class="hero-text">
+      <h1>hi, i'm <span>anoushka</span> ✶</h1>
+      <p>
+        a Computer Science student at the Hong Kong Polytechnic University —
+        making zines and software, one scrapbook page at a time.
+      </p>
+      <p class="hero-note">
+        scroll for the work ↓
+      </p>
+    </div>
+
+    <div class="hero-sticker">
+      <span class="tape" data-pos="top-center"></span>
+      <div class="hero-photo">
+        <div class="hero-photo-fallback">your photo ✶</div>
+        <img
+          src={withBase('/uploads/photos/portrait.jpg')}
+          alt="Anoushka"
+          loading="lazy"
+          onerror="this.remove()"
+        />
+      </div>
+    </div>
   </section>
 
   {

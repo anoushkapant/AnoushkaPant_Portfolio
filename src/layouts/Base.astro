@@ -7,9 +7,11 @@ interface LayoutProps {
   title?: string;
   description?: string;
   clean?: boolean;
+  typewriter?: boolean;
 }
-const { title = 'Anoushka — Portfolio', description = 'A scrapbook portfolio of creative and technical projects.', clean = false } = Astro.props as LayoutProps;
+const { title = 'Anoushka — Portfolio', description = 'A scrapbook portfolio of creative and technical projects.', clean = false, typewriter = false } = Astro.props as LayoutProps;
 const year = new Date().getFullYear();
+const bodyClass = [clean ? 'clean' : null, typewriter ? 'typewriter' : null].filter(Boolean).join(' ');
 ---
 
 <!doctype html>
@@ -22,17 +24,16 @@ const year = new Date().getFullYear();
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Shantell+Sans:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Shantell+Sans:ital,wght@0,400;0,600;1,400&family=Special+Elite&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <title>{title}</title>
   </head>
-  <body class:list={clean ? 'clean' : undefined}>
+  <body class:list={bodyClass}>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-nav">
       <a class="brand" href={withBase('/')}>
         <span class="brand-name">anoushka.</span>
-        <span class="brand-tag">creative × technical</span>
       </a>
       <nav aria-label="Main">
         <a href={withBase('/')}>work</a>
