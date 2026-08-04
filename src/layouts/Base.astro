@@ -9,9 +9,10 @@ interface LayoutProps {
   description?: string;
   clean?: boolean;
   typewriter?: boolean;
+  home?: boolean;
 }
-const { title = 'Anoushka — Portfolio', description = 'A scrapbook portfolio of creative and technical projects.', clean = false, typewriter = false } = Astro.props as LayoutProps;
-const bodyClass = [clean ? 'clean' : null, typewriter ? 'typewriter' : null].filter(Boolean).join(' ');
+const { title = 'Anoushka — Portfolio', description = 'A scrapbook portfolio of creative and technical projects.', clean = false, typewriter = false, home = false } = Astro.props as LayoutProps;
+const bodyClass = [clean ? 'clean' : null, typewriter ? 'typewriter' : null, home ? 'home' : null].filter(Boolean).join(' ');
 ---
 
 <!doctype html>

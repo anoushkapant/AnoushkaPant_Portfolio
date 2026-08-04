@@ -176,6 +176,11 @@ main {
   padding: 0 clamp(1rem, 4vw, 3rem) 2rem;
 }
 
+body.home main {
+  max-width: 1280px;
+  padding-inline: clamp(6rem, 8vw, 8rem);
+}
+
 /* ---------- glitter ---------- */
 .glitter {
   position: fixed;
@@ -233,7 +238,7 @@ main {
 .sticker-col img:nth-child(3) { transform: translateX(-16px) rotate(-5deg); }
 .sticker-col img:nth-child(4) { transform: translateX(12px) rotate(8deg); }
 .sticker-col img:nth-child(5) { transform: translateX(-8px) rotate(-6deg); }
-@media (max-width: 720px) {
+@media (max-width: 1099px) {
   .sticker-border {
     display: none;
   }
