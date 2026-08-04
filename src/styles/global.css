@@ -104,7 +104,7 @@ a {
   transform: rotate(-8deg);
 }
 .brand-name {
-  font-family: var(--font-hand);
+  font-family: var(--font-beth);
   font-size: 1.6rem;
   font-weight: 700;
 }
