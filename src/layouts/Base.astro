@@ -1,5 +1,6 @@
 ---
 import '~/styles/global.css';
+import { withBase } from '~/lib/paths';
 import type { Props } from 'astro';
 
 interface LayoutProps {
@@ -29,15 +30,15 @@ const year = new Date().getFullYear();
   <body class:list={clean ? 'clean' : undefined}>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-nav">
-      <a class="brand" href="/">
+      <a class="brand" href={withBase('/')}>
         <span class="brand-name">anoushka.</span>
         <span class="brand-tag">creative × technical</span>
       </a>
       <nav aria-label="Main">
-        <a href="/">work</a>
-        <a href="/about">about</a>
-        <a href="/contact">contact</a>
-        <a href="/fun">the sticker wall</a>
+        <a href={withBase('/')}>work</a>
+        <a href={withBase('/about')}>about</a>
+        <a href={withBase('/contact')}>contact</a>
+        <a href={withBase('/fun')}>the sticker wall</a>
       </nav>
     </header>
 

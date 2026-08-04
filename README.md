@@ -7,7 +7,7 @@ clean case-study pages, embedded PDFs, and a shared visitor sticker wall.
 
 ```bash
 npm install
-npm run dev          # http://localhost:4321
+npm run dev          # http://localhost:4321/portfolio/
 ```
 
 ## Add a project (your daily workflow)
@@ -116,4 +116,6 @@ supabase/schema.sql          # sticker wall table + RLS
 ## Site name
 
 `anoushka.` in the header/nav is a placeholder — search for `anoushka` across
-`src/` to rename it to you.
+`src/` to rename it to you. The base path is hardcoded to `/portfolio` in
+`astro.config.mjs` (matching this repo's GitHub Pages URL); change it if you
+deploy elsewhere.

@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import Polaroid from '../../components/Polaroid.astro';
 import PdfEmbed from '../../components/PdfEmbed.astro';
 import { getAllProjects, formatDate } from '../../lib/entries';
+import { withBase } from '../../lib/paths';
 
 export const getStaticPaths = (async () => {
   const all = await getAllProjects();
@@ -33,7 +34,7 @@ const { Content } = await render(project);
 >
   <article class="detail">
     <p style="margin:0;">
-      <a href="/" style="font-family: var(--font-caption); font-size: 1.2rem;">← back to the scrapbook</a>
+      <a href={withBase('/')} style="font-family: var(--font-caption); font-size: 1.2rem;">← back to the scrapbook</a>
     </p>
 
     <span class={`type-badge ${type}`}>{type}</span>
@@ -46,7 +47,7 @@ const { Content } = await render(project);
     {
       images.length > 0 && (
         <div class="detail-hero">
-          <img src={images[0]} alt={title} />
+          <img src={withBase(images[0])} alt={title} />
         </div>
       )
     }
@@ -79,12 +80,12 @@ const { Content } = await render(project);
     <nav class="prev-next" aria-label="Projects">
       {
         prev && (
-          <a href={`/projects/${prev.id}`} class="prev">← {prev.data.title}</a>
+          <a href={withBase(`/projects/${prev.id}`)} class="prev">← {prev.data.title}</a>
         )
       }
       {
         next && (
-          <a href={`/projects/${next.id}`} class="next">{next.data.title} →</a>
+          <a href={withBase(`/projects/${next.id}`)} class="next">{next.data.title} →</a>
         )
       }
     </nav>

@@ -1,12 +1,15 @@
 ---
+import { withBase } from '~/lib/paths';
+
 interface Props {
   url: string;
   label?: string;
 }
 const { url, label = 'PDF inside' } = Astro.props;
+const src = withBase(url);
 ---
 
-<a class="pdf-stamp" href={url} target="_blank" rel="noopener">
+<a class="pdf-stamp" href={src} target="_blank" rel="noopener">
   <span class="pdf-emoji" aria-hidden="true">📄</span>
   {label}
 </a>

@@ -1,19 +1,22 @@
 ---
+import { withBase } from '~/lib/paths';
+
 interface Props {
   url: string;
   label?: string;
 }
 const { url, label = 'Download PDF' } = Astro.props;
+const src = withBase(url);
 const basename = url.split('/').pop() ?? 'document.pdf';
 ---
 
 <section class="pdf-section">
   <h2>📎 The full thing</h2>
   <div class="pdf-embed">
-    <iframe src={`${url}`} title={basename} loading="lazy"></iframe>
+    <iframe src={src} title={basename} loading="lazy"></iframe>
   </div>
   <div style="margin-top: 0.7rem; text-align: right;">
-    <a class="btn" href={url} download={basename}>
+    <a class="btn" href={src} download={basename}>
       <span aria-hidden="true">⬇️</span> {label}
     </a>
   </div>

@@ -1,4 +1,6 @@
 ---
+import { withBase } from '~/lib/paths';
+
 interface Props {
   src?: string;
   alt?: string;
@@ -10,15 +12,17 @@ interface Props {
 }
 const { src, alt = '', caption, sub, tilt = 1, href, tape = false } = Astro.props;
 const tiltClamp = ((tilt % 6) + 6) % 6 + 1;
+const imgSrc = src ? withBase(src) : undefined;
+const linkHref = href ? withBase(href) : undefined;
 ---
 
 {
   href ? (
-    <a class="polaroid" href={href} data-tilt={tiltClamp}>
+    <a class="polaroid" href={linkHref} data-tilt={tiltClamp}>
       {tape && <span class="tape" data-pos="top-center"></span>}
       <div class="polaroid-photo">
-        {src
-          ? <img src={src} alt={alt} loading="lazy" decoding="async" />
+        {imgSrc
+          ? <img src={imgSrc} alt={alt} loading="lazy" decoding="async" />
           : <div class="placeholder"><span>your photo</span><span>goes here</span></div>}
       </div>
       <div class="polaroid-caption">{caption}{sub && <small>{sub}</small>}</div>
@@ -27,8 +31,8 @@ const tiltClamp = ((tilt % 6) + 6) % 6 + 1;
     <div class="polaroid" data-tilt={tiltClamp}>
       {tape && <span class="tape" data-pos="top-center"></span>}
       <div class="polaroid-photo">
-        {src
-          ? <img src={src} alt={alt} loading="lazy" decoding="async" />
+        {imgSrc
+          ? <img src={imgSrc} alt={alt} loading="lazy" decoding="async" />
           : <div class="placeholder"><span>your photo</span><span>goes here</span></div>}
       </div>
       <div class="polaroid-caption">{caption}{sub && <small>{sub}</small>}</div>

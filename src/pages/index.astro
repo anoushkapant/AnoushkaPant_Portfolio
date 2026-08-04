@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import FilterBar from '../components/FilterBar.astro';
 import Polaroid from '../components/Polaroid.astro';
 import PdfStamp from '../components/PdfStamp.astro';
+import { withBase } from '../lib/paths';
 import { getFeatured, getNonFeatured, formatDate } from '../lib/entries';
 
 const featured = await getFeatured();
@@ -70,7 +71,7 @@ const rest = await getNonFeatured();
 
   <section class="fun-hero" style="margin-top: 1rem;">
     <p>
-      psst — the <a href="/fun" style="font-family: var(--font-caption); font-size: 1.35rem;">sticker wall</a> is open. leave a sticker on your way out.
+      psst — the <a href={withBase('/fun')} style="font-family: var(--font-caption); font-size: 1.35rem;">sticker wall</a> is open. leave a sticker on your way out.
     </p>
   </section>
 </Base>

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { withBase } from '../lib/paths';
 ---
 
 <Base
@@ -19,7 +20,7 @@ import Base from '../layouts/Base.astro';
     <li><a href="https://github.com/yourusername" target="_blank" rel="noopener">⟨⟩ github</a></li>
     <li><a href="https://instagram.com/yourusername" target="_blank" rel="noopener">📷 instagram</a></li>
     <li><a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener">💼 linkedin</a></li>
-    <li><a href="/uploads/pdfs/resume.pdf" download>📄 resume (pdf)</a></li>
+    <li><a href={withBase('/uploads/pdfs/resume.pdf')} download>📄 resume (pdf)</a></li>
   </ul>
 
   <p style="font-family: var(--font-caption); font-size: 1.3rem; color: var(--ink-soft); margin-top: 2.4rem;">
