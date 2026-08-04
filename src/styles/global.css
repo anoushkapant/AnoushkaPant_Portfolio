@@ -215,6 +215,18 @@ body.home main {
   pointer-events: none;
   z-index: 20;
 }
+.border-line {
+  position: absolute;
+  top: 76px;
+  bottom: 0;
+  border-left: 3px dotted rgba(226, 124, 130, 0.55);
+}
+.border-line.line-left {
+  left: 10.5%;
+}
+.border-line.line-right {
+  right: 10.5%;
+}
 .sticker-col {
   position: absolute;
   top: 76px;
