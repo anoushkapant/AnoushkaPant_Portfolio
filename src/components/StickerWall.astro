@@ -256,16 +256,34 @@ const adminHref = withBase('/admin/stickers');
       const src = btn.dataset.traySrc!;
       let ghost: HTMLElement | null = null;
       let armed = false;
+      let lastX = 0;
+      let lastY = 0;
+
+      function dropAt(x: number, y: number) {
+        const rect = stage.getBoundingClientRect();
+        const inside =
+          x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+        if (inside) {
+          const { x: px, y: py } = posFromEvent({ clientX: x, clientY: y } as PointerEvent);
+          void place(src, px, py);
+        }
+      }
 
       btn.addEventListener('pointerdown', (e) => {
         if (e.button !== 0) return;
         e.preventDefault();
         armed = true;
-        btn.setPointerCapture(e.pointerId);
+        lastX = e.clientX;
+        lastY = e.clientY;
+        try {
+          btn.setPointerCapture(e.pointerId);
+        } catch {
+          /* capture is best-effort */
+        }
         ghost = document.createElement('div');
         ghost.className = 'sticker dragging img-sticker';
-        ghost.style.left = `${e.clientX}px`;
-        ghost.style.top = `${e.clientY}px`;
+        ghost.style.left = `${lastX}px`;
+        ghost.style.top = `${lastY}px`;
         ghost.style.position = 'fixed';
         ghost.style.transform = 'translate(-50%, -50%) rotate(-4deg)';
         ghost.style.pointerEvents = 'none';
@@ -278,32 +296,31 @@ const adminHref = withBase('/admin/stickers');
       });
       btn.addEventListener('pointermove', (e) => {
         if (!armed || !ghost) return;
-        ghost.style.left = `${e.clientX}px`;
-        ghost.style.top = `${e.clientY}px`;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        ghost.style.left = `${lastX}px`;
+        ghost.style.top = `${lastY}px`;
       });
       btn.addEventListener('pointerup', (e) => {
         if (!armed) return;
         armed = false;
         ghost?.remove();
         ghost = null;
-        const rect = stage.getBoundingClientRect();
-        const inside =
-          e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
-        if (inside) {
-          const { x, y } = posFromEvent(e);
-          void place(src, x, y);
-        }
+        dropAt(e.clientX, e.clientY);
       });
       btn.addEventListener('pointercancel', () => {
+        if (!armed) return;
         armed = false;
         ghost?.remove();
         ghost = null;
+        dropAt(lastX, lastY);
       });
       btn.addEventListener('lostpointercapture', () => {
         if (!armed) return;
         armed = false;
         ghost?.remove();
         ghost = null;
+        dropAt(lastX, lastY);
       });
     });
   }
@@ -372,13 +389,13 @@ const adminHref = withBase('/admin/stickers');
     };
   }
 
+  attachTrayDrag();
   void loadStickers()
     .catch(() => {
       stickers = readLocal().filter(isImageSticker);
       render();
     })
     .then(() => {
-      attachTrayDrag();
       if (supabase) void listenRealtime();
     });
 </script>
