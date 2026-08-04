@@ -1,5 +1,11 @@
 ---
-const filters = ['all', 'creative', 'technical'] as const;
+import { withBase } from '~/lib/paths';
+
+const filters = [
+  { value: 'all', label: 'All', icon: undefined },
+  { value: 'creative', label: 'Creative', icon: '/uploads/stickers/sticker3-flower.png' },
+  { value: 'technical', label: 'Technical', icon: '/uploads/stickers/sticker7-star-button.png' },
+] as const;
 ---
 
 <div class="filter-bar" data-filter-bar>
@@ -8,10 +14,11 @@ const filters = ['all', 'creative', 'technical'] as const;
       <button
         class="filter-btn"
         type="button"
-        data-filter={f}
-        aria-pressed={f === 'all' ? 'true' : 'false'}
+        data-filter={f.value}
+        aria-pressed={f.value === 'all' ? 'true' : 'false'}
       >
-        {f === 'all' ? 'All' : f === 'creative' ? '🎨 Creative' : '⚙️ Technical'}
+        {f.icon && <img class="filter-icon" src={withBase(f.icon)} alt="" />}
+        {f.label}
       </button>
     ))
   }

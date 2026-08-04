@@ -5,13 +5,14 @@ interface Props {
   src?: string;
   alt?: string;
   color?: string;
+  icon?: string;
   caption: string;
   sub?: string;
   tilt?: number;
   href?: string;
   tape?: boolean;
 }
-const { src, alt = '', color, caption, sub, tilt = 1, href, tape = false } = Astro.props;
+const { src, alt = '', color, icon, caption, sub, tilt = 1, href, tape = false } = Astro.props;
 const tiltClamp = ((tilt % 6) + 6) % 6 + 1;
 const imgSrc = src ? withBase(src) : undefined;
 const linkHref = href ? withBase(href) : undefined;
@@ -25,7 +26,7 @@ const linkHref = href ? withBase(href) : undefined;
         {imgSrc
           ? <img src={imgSrc} alt={alt} loading="lazy" decoding="async" />
           : color
-            ? <div class="pastel" style={`background-color: ${color};`} aria-hidden="true"></div>
+            ? <div class="pastel" style={`background-color: ${color};`}>{icon && <img class="pastel-icon" src={withBase(icon)} alt="" loading="lazy" />}</div>
             : <div class="placeholder"><span>your photo</span><span>goes here</span></div>}
       </div>
       <div class="polaroid-caption">{caption}{sub && <small>{sub}</small>}</div>
@@ -37,7 +38,7 @@ const linkHref = href ? withBase(href) : undefined;
         {imgSrc
           ? <img src={imgSrc} alt={alt} loading="lazy" decoding="async" />
           : color
-            ? <div class="pastel" style={`background-color: ${color};`} aria-hidden="true"></div>
+            ? <div class="pastel" style={`background-color: ${color};`}>{icon && <img class="pastel-icon" src={withBase(icon)} alt="" loading="lazy" />}</div>
             : <div class="placeholder"><span>your photo</span><span>goes here</span></div>}
       </div>
       <div class="polaroid-caption">{caption}{sub && <small>{sub}</small>}</div>

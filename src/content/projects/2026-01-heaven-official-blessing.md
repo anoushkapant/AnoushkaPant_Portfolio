@@ -2,7 +2,7 @@
 title: "Heaven Official's Blessing — Fan Art"
 date: 2026-01-15
 type: creative
-featured: true
+featured: false
 tags: ["fanart", "digital illustration", "original character"]
 summary: "A digital illustration of the iconic couple from Heaven Official's Blessing (天官赐福), painted in soft pastel tones."
 images:

@@ -77,10 +77,10 @@ a {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 7px;
-  height: 11px;
-  background: rgba(226, 124, 130, 0.42);
-  border-radius: 6px;
+  bottom: 5px;
+  height: 6px;
+  background: rgba(226, 124, 130, 0.45);
+  border-radius: 3px;
   z-index: 0;
   pointer-events: none;
 }
@@ -91,10 +91,16 @@ a {
 }
 .brand {
   display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
+  align-items: center;
+  gap: 0.55rem;
   text-decoration: none;
   color: var(--ink);
+}
+.brand-sticker {
+  width: 30px;
+  height: auto;
+  display: block;
+  transform: rotate(-8deg);
 }
 .brand-name {
   font-family: var(--font-hand);
@@ -128,10 +134,10 @@ a {
   position: absolute;
   left: 0;
   right: 0;
-  top: 7px;
-  height: 11px;
-  background: rgba(226, 124, 130, 0.42);
-  border-radius: 6px;
+  top: 5px;
+  height: 6px;
+  background: rgba(226, 124, 130, 0.45);
+  border-radius: 3px;
   z-index: 0;
   pointer-events: none;
 }
@@ -201,6 +207,15 @@ main {
   z-index: 2;
   max-width: 560px;
   text-align: center;
+  background-color: #fbf7ec;
+  background-image:
+    repeating-linear-gradient(to bottom, transparent 0 30px, rgba(61, 107, 107, 0.14) 30px 31px),
+    radial-gradient(rgba(45, 42, 38, 0.05) 1px, transparent 1px);
+  background-size: 100% 100%, 22px 22px;
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  padding: 1.6rem clamp(1.2rem, 3vw, 2.4rem) 1.4rem;
+  transform: rotate(-0.6deg);
 }
 .hero-text h1 {
   font-family: var(--font-hand);
@@ -339,6 +354,9 @@ body.typewriter .skill-box li {
   margin: 1.6rem 0 2rem;
 }
 .filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   font-family: var(--font-caption);
   font-size: 1.3rem;
   padding: 0.35rem 1.1rem;
@@ -348,6 +366,12 @@ body.typewriter .skill-box li {
   color: var(--ink);
   cursor: pointer;
   transition: transform 0.15s ease, background 0.15s ease;
+}
+.filter-btn .filter-icon {
+  width: 22px;
+  height: auto;
+  display: block;
+  pointer-events: none;
 }
 .filter-btn:hover {
   transform: translateY(-2px) rotate(-1deg);
@@ -402,7 +426,16 @@ body.typewriter .skill-box li {
 .polaroid .polaroid-photo .pastel {
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 55%);
+}
+.polaroid .polaroid-photo .pastel-icon {
+  width: 88px;
+  height: auto;
+  transform: rotate(-6deg);
+  filter: drop-shadow(0 2px 2px rgba(45, 42, 38, 0.18));
 }
 .polaroid .polaroid-photo .placeholder {
   width: 100%;
@@ -779,8 +812,8 @@ body.clean main {
   margin: 2.4rem 0 1rem;
 }
 .experience-heading {
-  font-family: var(--font-hand);
-  font-size: 1.7rem;
+  font-family: var(--font-beth);
+  font-size: 1.8rem;
   text-align: center;
   margin: 0 0 1.4rem;
 }
