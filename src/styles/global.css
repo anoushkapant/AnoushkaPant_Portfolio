@@ -206,6 +206,9 @@ body.home main {
 }
 
 /* ---------- hero ---------- */
+.home-top {
+  position: relative;
+}
 .sticker-border {
   position: absolute;
   inset: 0;
