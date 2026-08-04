@@ -217,10 +217,10 @@ main {
   justify-content: space-between;
 }
 .sticker-col.col-left {
-  left: clamp(4px, 1.2vw, 18px);
+  left: 2%;
 }
 .sticker-col.col-right {
-  right: clamp(4px, 1.2vw, 18px);
+  right: 2%;
 }
 .sticker-col img {
   width: clamp(39px, 5.2vw, 75px);
