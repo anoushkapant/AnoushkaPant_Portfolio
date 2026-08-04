@@ -1,7 +1,7 @@
 ---
 import { withBase } from '~/lib/paths';
 
-export const TRAY_EMOJI = ['⭐', '🌻', '💙', '🐌', '🌷', '🔥', '🪩', '🍄', '✏️', '💡'];
+export const TRAY_EMOJI = ['⭐', '🌻', '💙', '🐌', '🌷', '🔥', '🌼', '🍄', '✏️', '💡'];
 export const MAX_STICKERS = 100;
 export const MIN_PLACE_INTERVAL_MS = 5000;
 const adminHref = withBase('/admin/stickers');
@@ -11,7 +11,7 @@ const adminHref = withBase('/admin/stickers');
   <div class="sticker-stage" data-stage>
     <div class="empty-hint" data-empty-hint>
       <span>the wall is blank…</span>
-      <span>pick a sticker below and stick it anywhere 🪩</span>
+      <span>pick a sticker below and stick it anywhere 🌷</span>
     </div>
   </div>
   <p class="status-line" data-status aria-live="polite"></p>
@@ -111,7 +111,7 @@ const adminHref = withBase('/admin/stickers');
       return null;
     }
     if (stickers.length >= MAX_STICKERS) {
-      setStatus('the wall is full for now — move a sticker instead 🪩');
+      setStatus('the wall is full for now — move a sticker instead 🌷');
       return null;
     }
     lastPlace = Date.now();
