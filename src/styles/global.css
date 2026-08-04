@@ -11,6 +11,8 @@
   --font-hand: 'Shantell Sans', 'Caveat', cursive;
   --font-caption: 'Caveat', cursive;
   --font-type: 'Special Elite', 'Courier Prime', monospace;
+  --font-beth: 'Beth Ellen', 'Shantell Sans', cursive;
+  --font-alice: 'Alice', Georgia, serif;
   --font-clean: 'Inter', system-ui, sans-serif;
   --radius: 14px;
 }
@@ -147,6 +149,7 @@ main {
   inset: 0;
   pointer-events: none;
   z-index: 1;
+  overflow: hidden;
 }
 .scatter .s {
   position: absolute;
@@ -397,11 +400,10 @@ body.typewriter .skill-box li {
   text-align: center;
 }
 .featured-label {
-  font-family: var(--font-caption);
-  font-size: 1.35rem;
+  font-family: var(--font-beth);
+  font-size: 1.5rem;
   color: var(--accent);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 .featured-card {
   display: inline-block;
@@ -424,9 +426,10 @@ body.clean main {
   padding: 2rem 0;
 }
 .detail h1 {
-  font-family: var(--font-hand);
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-family: var(--font-beth);
+  font-size: clamp(2rem, 5vw, 3rem);
   margin: 0.2rem 0 0.4rem;
+  line-height: 1.25;
 }
 .detail .detail-meta {
   font-family: var(--font-caption);
@@ -506,11 +509,14 @@ body.clean main {
 .detail-body {
   font-size: 1.02rem;
   color: #3a3632;
+  font-family: var(--font-alice);
+  font-weight: 700;
 }
 .detail-body h2 {
-  font-family: var(--font-hand);
-  font-size: 1.5rem;
+  font-family: var(--font-beth);
+  font-size: 1.6rem;
   margin-top: 2rem;
+  font-weight: 400;
 }
 .detail-body h3 {
   font-size: 1.1rem;
@@ -767,6 +773,12 @@ body.typewriter .exp-card h3 {
   transition: transform 0.12s ease;
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.18));
 }
+.sticker.img-sticker img {
+  width: 68px;
+  height: auto;
+  display: block;
+  pointer-events: none;
+}
 .sticker:hover {
   transform: translate(-50%, -50%) scale(1.15);
 }
@@ -801,14 +813,19 @@ body.typewriter .exp-card h3 {
   padding: 0 0.4rem;
 }
 .tray-sticker {
-  font-size: 1.7rem;
-  line-height: 1;
   background: transparent;
   border: none;
   cursor: grab;
   padding: 0.2rem 0.3rem;
   border-radius: 8px;
+  line-height: 1;
   transition: transform 0.12s ease, background 0.12s ease;
+}
+.tray-sticker img {
+  width: 38px;
+  height: auto;
+  display: block;
+  pointer-events: none;
 }
 .tray-sticker:hover {
   background: rgba(224, 122, 95, 0.18);
@@ -831,6 +848,12 @@ body.typewriter .exp-card h3 {
   font-size: 0.72rem;
   color: rgba(45, 42, 38, 0.35);
   text-decoration: none;
+}
+
+@media (max-width: 720px) {
+  .scatter .s[data-mid] {
+    display: none;
+  }
 }
 
 /* ---------- responsive ---------- */

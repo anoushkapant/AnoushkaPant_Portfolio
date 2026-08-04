@@ -1,7 +1,16 @@
 ---
 import { withBase } from '~/lib/paths';
 
-export const TRAY_EMOJI = ['⭐', '🌻', '💙', '🐌', '🌷', '🔥', '🌼', '🍄', '✏️', '💡'];
+export const TRAY_STICKERS = [
+  { src: '/uploads/stickers/sticker1-cat.png', label: 'cat' },
+  { src: '/uploads/stickers/sticker2-cat.png', label: 'cat' },
+  { src: '/uploads/stickers/sticker3-flower.png', label: 'flower button' },
+  { src: '/uploads/stickers/sticker4-star.png', label: 'star patch' },
+  { src: '/uploads/stickers/sticker5-catbread.png', label: 'catbread' },
+  { src: '/uploads/stickers/sticker6-flower-pink.png', label: 'pink flower button' },
+  { src: '/uploads/stickers/sticker7-star-button.png', label: 'star button' },
+  { src: '/uploads/stickers/sticker8-strawberry.png', label: 'strawberry' },
+];
 export const MAX_STICKERS = 100;
 export const MIN_PLACE_INTERVAL_MS = 5000;
 const adminHref = withBase('/admin/stickers');
@@ -18,13 +27,16 @@ const adminHref = withBase('/admin/stickers');
   <div class="sticker-tray" data-tray aria-label="Sticker tray">
     <span class="tray-label">grab one ↓</span>
     {
-      TRAY_EMOJI.map((emoji) => (
+      TRAY_STICKERS.map((s) => (
         <button
           class="tray-sticker"
           type="button"
-          data-tray-sticker={emoji}
-          aria-label={`Sticker ${emoji}`}
-        >{emoji}</button>
+          data-tray-sticker={s.label}
+          data-tray-src={withBase(s.src)}
+          aria-label={`Sticker ${s.label}`}
+        >
+          <img src={withBase(s.src)} alt={s.label} />
+        </button>
       ))
     }
   </div>
@@ -35,6 +47,7 @@ const adminHref = withBase('/admin/stickers');
 
 <script>
   import { getSupabase, MAX_STICKERS, MIN_PLACE_INTERVAL_MS } from '../lib/stickers.ts';
+  import { withBase } from '../lib/paths.ts';
   import type { Sticker } from '../lib/stickers.ts';
 
   interface LocalSticker extends Sticker {
@@ -55,6 +68,7 @@ const adminHref = withBase('/admin/stickers');
 
   const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
   const randRot = () => Math.round((Math.random() * 2 - 1) * 18);
+  const isImage = (v: string) => v.startsWith('/') || v.startsWith('http');
 
   async function loadStickers() {
     if (!supabase) {
@@ -80,17 +94,32 @@ const adminHref = withBase('/admin/stickers');
     localStorage.setItem(LOCAL_KEY, JSON.stringify(stickers));
   }
 
+  function makeStickerEl(s: LocalSticker): HTMLElement {
+    const el = document.createElement('div');
+    el.className = 'sticker';
+    el.dataset.id = String(s.id);
+    el.style.left = `${s.x}%`;
+    el.style.top = `${s.y}%`;
+    el.style.transform = `translate(-50%, -50%) rotate(${s.rotation}deg)`;
+    if (isImage(s.emoji)) {
+      el.classList.add('img-sticker');
+      const img = document.createElement('img');
+      img.src = s.emoji;
+      img.alt = '';
+      el.appendChild(img);
+      el.setAttribute('aria-label', 'Sticker');
+    } else {
+      el.classList.add('emoji-sticker');
+      el.textContent = s.emoji;
+      el.setAttribute('aria-label', `Sticker ${s.emoji}`);
+    }
+    return el;
+  }
+
   function render() {
     stage.querySelectorAll('.sticker').forEach((el) => el.remove());
     for (const s of stickers) {
-      const el = document.createElement('div');
-      el.className = 'sticker';
-      el.dataset.id = String(s.id);
-      el.textContent = s.emoji;
-      el.style.left = `${s.x}%`;
-      el.style.top = `${s.y}%`;
-      el.style.transform = `translate(-50%, -50%) rotate(${s.rotation}deg)`;
-      el.setAttribute('aria-label', `Sticker ${s.emoji}`);
+      const el = makeStickerEl(s);
       stage.appendChild(el);
       attachStickerDrag(el, s);
     }
@@ -105,7 +134,7 @@ const adminHref = withBase('/admin/stickers');
     };
   }
 
-  async function place(emoji: string, x: number, y: number) {
+  async function place(value: string, x: number, y: number) {
     if (Date.now() - lastPlace < MIN_PLACE_INTERVAL_MS) {
       setStatus('slow down — one sticker every few seconds');
       return null;
@@ -116,6 +145,7 @@ const adminHref = withBase('/admin/stickers');
     }
     lastPlace = Date.now();
     const rotation = randRot();
+    const emoji = isImage(value) ? withBase(value) : value;
 
     if (!supabase) {
       const s: LocalSticker = {
@@ -148,7 +178,7 @@ const adminHref = withBase('/admin/stickers');
       stickers.push(data as Sticker);
       render();
     }
-    setStatus(`stuck ${emoji} on the wall`);
+    setStatus('stuck it on the wall');
     return data;
   }
 
@@ -196,7 +226,8 @@ const adminHref = withBase('/admin/stickers');
 
   function attachTrayDrag() {
     tray.querySelectorAll<HTMLElement>('[data-tray-sticker]').forEach((btn) => {
-      const emoji = btn.dataset.traySticker!;
+      const label = btn.dataset.traySticker!;
+      const src = btn.dataset.traySrc!;
       let ghost: HTMLElement | null = null;
       let armed = false;
 
@@ -206,14 +237,17 @@ const adminHref = withBase('/admin/stickers');
         armed = true;
         btn.setPointerCapture(e.pointerId);
         ghost = document.createElement('div');
-        ghost.className = 'sticker dragging';
-        ghost.textContent = emoji;
+        ghost.className = 'sticker dragging img-sticker';
         ghost.style.left = `${e.clientX}px`;
         ghost.style.top = `${e.clientY}px`;
         ghost.style.position = 'fixed';
         ghost.style.transform = 'translate(-50%, -50%) rotate(-4deg)';
         ghost.style.pointerEvents = 'none';
-        ghost.style.fontSize = '3rem';
+        ghost.style.width = '72px';
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = '';
+        ghost.appendChild(img);
         document.body.appendChild(ghost);
       });
       btn.addEventListener('pointermove', (e) => {
@@ -231,7 +265,7 @@ const adminHref = withBase('/admin/stickers');
           e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
         if (inside) {
           const { x, y } = posFromEvent(e);
-          void place(emoji, x, y);
+          void place(src, x, y);
         }
       });
     });
