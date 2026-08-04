@@ -210,29 +210,6 @@ main {
   flex-wrap: wrap;
   padding: 2.4rem 0 1.2rem;
 }
-.scatter {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 100vw;
-  margin-left: -50vw;
-  pointer-events: none;
-  z-index: 2;
-  overflow: hidden;
-}
-.scatter .s {
-  position: absolute;
-  line-height: 1;
-  opacity: 0.92;
-  pointer-events: none;
-}
-.scatter .s img {
-  width: 100%;
-  height: auto;
-  display: block;
-  filter: drop-shadow(0 3px 3px rgba(45, 42, 38, 0.22));
-}
 .hero-text {
   position: relative;
   z-index: 2;
@@ -1014,12 +991,6 @@ body.typewriter .exp-card h3 {
   font-size: 0.72rem;
   color: rgba(45, 42, 38, 0.35);
   text-decoration: none;
-}
-
-@media (max-width: 720px) {
-  .scatter .s[data-mid] {
-    display: none;
-  }
 }
 
 /* ---------- responsive ---------- */

@@ -9,17 +9,6 @@ import { getFeatured, getNonFeatured, formatDate } from '../lib/entries';
 const featured = await getFeatured();
 const rest = await getNonFeatured();
 
-const heroStickers = [
-  { src: '/uploads/stickers/sticker4-star.png', style: { top: '0.5%', left: '0.3%', width: '68px', transform: 'rotate(-8deg)' } },
-  { src: '/uploads/stickers/sticker4-star.png', style: { top: '0.5%', right: '0.75%', width: '68px', transform: 'rotate(8deg)' } },
-  { src: '/uploads/stickers/sticker1-cat.png', style: { top: '18%', left: '0.5%', width: '120px', transform: 'rotate(-10deg)' } },
-  { src: '/uploads/stickers/sticker2-cat.png', style: { top: '18%', right: '1.5%', width: '110px', transform: 'rotate(9deg)' } },
-  { src: '/uploads/stickers/sticker3-flower.png', mid: true, style: { bottom: '1%', left: '0.5%', width: '82px', transform: 'rotate(-6deg)' } },
-  { src: '/uploads/stickers/sticker5-catbread.png', style: { bottom: '24%', left: '0.8%', width: '95px', transform: 'rotate(4deg)' } },
-  { src: '/uploads/stickers/sticker7-star-button.png', mid: true, style: { bottom: '1%', right: '1%', width: '62px', transform: 'rotate(16deg)' } },
-  { src: '/uploads/stickers/sticker6-flower-pink.png', mid: true, style: { bottom: '17%', right: '6%', width: '56px', transform: 'rotate(10deg)' } },
-];
-
 const pastel = ['#f9d5d3', '#d9e8d5', '#f7e6c4', '#d5e4f0', '#ecd9e8', '#d5ecec', '#f2dcd1'];
 
 const pastelIcons = [
@@ -40,18 +29,6 @@ let iconIndex = 0;
   typewriter
 >
   <section class="hero">
-    <div class="scatter" aria-hidden="true">
-      {heroStickers.map((s) => (
-        <span
-          class="s"
-          data-mid={s.mid ? '' : undefined}
-          style={s.style}
-        >
-          <img src={withBase(s.src)} alt="" />
-        </span>
-      ))}
-    </div>
-
     <div class="hero-text">
       <h1>Hi I am <span>Anoushka</span></h1>
       <p>
