@@ -4,7 +4,7 @@ import FilterBar from '../components/FilterBar.astro';
 import Polaroid from '../components/Polaroid.astro';
 import PdfStamp from '../components/PdfStamp.astro';
 import { withBase } from '../lib/paths';
-import { getFeatured, getNonFeatured, formatDate } from '../lib/entries';
+import { getFeatured, getNonFeatured } from '../lib/entries';
 
 const featured = await getFeatured();
 const rest = await getNonFeatured();
@@ -108,7 +108,6 @@ let iconIndex = 0;
             src={featured.data.images[0]}
             alt={featured.data.summary}
             caption={featured.data.title}
-            sub={formatDate(featured.data.date)}
             tilt={1}
             tape
             href={`/projects/${featured.id}`}
@@ -137,7 +136,7 @@ let iconIndex = 0;
               icon={icon}
               alt={project.data.summary}
               caption={project.data.title}
-              sub={technical ? formatDate(project.data.date) : undefined}
+              sub={undefined}
               tilt={i % 6}
               href={`/projects/${project.id}`}
               tape={i % 3 === 0}
