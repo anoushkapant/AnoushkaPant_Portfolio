@@ -218,6 +218,18 @@ body.home main {
 .home-top {
   position: relative;
 }
+.wallpaper-layer {
+  position: absolute;
+  top: calc(76px + 0.1%);
+  left: 0;
+  width: min(400px, 55vw);
+  height: auto;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  opacity: 0.95;
+}
 .sticker-border {
   position: absolute;
   inset: 0;
