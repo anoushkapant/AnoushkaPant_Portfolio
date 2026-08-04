@@ -14,7 +14,13 @@ export async function getFeatured() {
 
 export async function getNonFeatured() {
   const all = await getAllProjects();
-  return all.filter((p) => !p.data.featured);
+  return all.filter((p) => !p.data.featured)
+    .sort((a, b) => {
+      const typeA = a.data.type === 'technical' ? 0 : 1;
+      const typeB = b.data.type === 'technical' ? 0 : 1;
+      if (typeA !== typeB) return typeA - typeB;
+      return b.data.date.valueOf() - a.data.date.valueOf();
+    });
 }
 
 export async function getProjectBySlug(slug: string) {
