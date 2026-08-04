@@ -12,6 +12,16 @@ create table if not exists public.stickers (
 
 alter table public.stickers enable row level security;
 
+-- drop first so this script can be re-run safely
+drop policy if exists "stickers_read" on public.stickers;
+drop policy if exists "stickers_insert" on public.stickers;
+drop policy if exists "stickers_update" on public.stickers;
+-- anyone can delete (the admin page uses the anon key; the token in the
+-- bundle is obfuscation, not real auth — the wall is a play wall)
+drop policy if exists "stickers_delete" on public.stickers;
+create policy "stickers_delete" on public.stickers
+  for delete using (true);
+
 -- anyone can read the board
 create policy "stickers_read" on public.stickers
   for select using (true);
@@ -24,9 +34,9 @@ create policy "stickers_insert" on public.stickers
 create policy "stickers_update" on public.stickers
   for update using (true) with check (true);
 
--- only authenticated users can delete (used by the admin page)
-create policy "stickers_delete_auth" on public.stickers
-  for delete using (auth.role() = 'authenticated');
+-- anyone can delete (admin page uses the anon key)
+create policy "stickers_delete" on public.stickers
+  for delete using (true);
 
 -- optional: keep the board bounded by deleting the oldest stickers
 -- beyond the newest 300 (run on a schedule or manually):
