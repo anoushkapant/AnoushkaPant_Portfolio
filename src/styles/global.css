@@ -221,7 +221,10 @@ body.home main {
 }
 .sticker-border {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: calc(clamp(6rem, 8vw, 8rem) * -1);
+  right: calc(clamp(6rem, 8vw, 8rem) * -1);
   pointer-events: none;
   z-index: 0;
 }
