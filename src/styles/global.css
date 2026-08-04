@@ -107,6 +107,7 @@ a {
   font-family: var(--font-beth);
   font-size: 1.6rem;
   font-weight: 700;
+  margin-top: -4px;
 }
 .site-nav nav {
   display: flex;
