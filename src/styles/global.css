@@ -855,7 +855,8 @@ body.clean main {
   gap: 0.9rem;
 }
 .contact-options a {
-  font-family: var(--font-caption);
+  font-family: var(--font-alice);
+  font-weight: 700;
   font-size: 1.5rem;
   color: var(--ink);
   text-decoration: none;
