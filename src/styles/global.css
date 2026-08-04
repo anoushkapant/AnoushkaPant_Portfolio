@@ -251,11 +251,6 @@ body.home main {
 .sticker-col img:nth-child(3) { transform: translateX(-16px) rotate(-5deg); }
 .sticker-col img:nth-child(4) { transform: translateX(12px) rotate(8deg); }
 .sticker-col img:nth-child(5) { transform: translateX(-8px) rotate(-6deg); }
-@media (max-width: 1099px) {
-  .sticker-border {
-    display: none;
-  }
-}
 .hero {
   position: relative;
   display: flex;
