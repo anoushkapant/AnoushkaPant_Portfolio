@@ -62,31 +62,33 @@ const adminHref = withBase('/admin/stickers');
   const tray = root.querySelector<HTMLElement>('[data-tray]')!;
 
   const supabase = getSupabase();
-  const LOCAL_KEY = 'scrapbook:local-stickers';
+  const LOCAL_KEY = 'scrapbook:local-stickers-v2';
   let stickers: LocalSticker[] = [];
   let lastPlace = 0;
 
   const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
   const randRot = () => Math.round((Math.random() * 2 - 1) * 18);
   const isImage = (v: string) => v.startsWith('/') || v.startsWith('http');
+  const isImageSticker = (s: Sticker) => isImage(s.emoji);
 
   async function loadStickers() {
+    let loaded: LocalSticker[];
     if (!supabase) {
       try {
         const raw = localStorage.getItem(LOCAL_KEY);
-        stickers = raw ? (JSON.parse(raw) as LocalSticker[]) : [];
+        loaded = raw ? (JSON.parse(raw) as LocalSticker[]) : [];
       } catch {
-        stickers = [];
+        loaded = [];
       }
-      render();
-      return;
+    } else {
+      const { data } = await supabase
+        .from('stickers')
+        .select('*')
+        .order('created_at', { ascending: true })
+        .limit(MAX_STICKERS);
+      loaded = (data ?? []) as Sticker[];
     }
-    const { data } = await supabase
-      .from('stickers')
-      .select('*')
-      .order('created_at', { ascending: true })
-      .limit(MAX_STICKERS);
-    stickers = (data ?? []) as Sticker[];
+    stickers = loaded.filter(isImageSticker);
     render();
   }
 
@@ -146,40 +148,44 @@ const adminHref = withBase('/admin/stickers');
     lastPlace = Date.now();
     const rotation = randRot();
     const emoji = isImage(value) ? withBase(value) : value;
+    const s: LocalSticker = {
+      id: Date.now(),
+      emoji,
+      x,
+      y,
+      rotation,
+      created_at: new Date().toISOString(),
+      local: true,
+    };
+    stickers.push(s);
+    persistLocal();
+    render();
+    setStatus('stuck it!');
 
     if (!supabase) {
-      const s: LocalSticker = {
-        id: Date.now(),
-        emoji,
-        x,
-        y,
-        rotation,
-        created_at: new Date().toISOString(),
-        local: true,
-      };
-      stickers.push(s);
-      persistLocal();
-      render();
       setStatus('stuck it (local demo — connect Supabase to share it)');
       return s;
     }
 
-    setStatus('sticking…');
     const { data, error } = await supabase
       .from('stickers')
       .insert({ emoji, x, y, rotation })
       .select()
       .single();
     if (error) {
-      setStatus(`couldn't stick it: ${error.message}`);
-      return null;
+      setStatus(`kept locally — cloud sync failed: ${error.message}`);
+      return s;
     }
-    if (data && !stickers.some((s) => s.id === data.id)) {
-      stickers.push(data as Sticker);
-      render();
+    if (data) {
+      const mine = stickers.find((o) => o.id === s.id);
+      if (mine) {
+        mine.id = data.id;
+        mine.local = false;
+        persistLocal();
+      }
+      setStatus('stuck it on the wall');
     }
-    setStatus('stuck it on the wall');
-    return data;
+    return s;
   }
 
   async function move(s: LocalSticker, x: number, y: number) {
@@ -287,6 +293,19 @@ const adminHref = withBase('/admin/stickers');
         { event: 'INSERT', schema: 'public', table: 'stickers' },
         (payload) => {
           const row = payload.new as Sticker;
+          const pending = stickers.find(
+            (s) =>
+              s.local &&
+              s.emoji === row.emoji &&
+              Math.abs(s.x - row.x) < 0.001 &&
+              Math.abs(s.y - row.y) < 0.001
+          );
+          if (pending) {
+            pending.id = row.id;
+            pending.local = false;
+            persistLocal();
+            return;
+          }
           if (!stickers.some((s) => s.id === row.id)) {
             stickers.push(row);
             if (stickers.length > MAX_STICKERS) stickers.shift();

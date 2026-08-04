@@ -1,0 +1,28 @@
+---
+const sparkles = [
+  { left: '7%', top: '16%', size: 14, delay: 0, dur: 2.8, color: '#e8b79e' },
+  { left: '92%', top: '22%', size: 18, delay: 0.6, dur: 3.2, color: '#e9c46a' },
+  { left: '14%', top: '58%', size: 12, delay: 1.1, dur: 2.4, color: '#e07a5f' },
+  { left: '86%', top: '64%', size: 15, delay: 1.6, dur: 3, color: '#d9a441' },
+  { left: '48%', top: '8%', size: 12, delay: 0.3, dur: 2.6, color: '#f2b8b8' },
+  { left: '64%', top: '40%', size: 11, delay: 2, dur: 2.9, color: '#e9c46a' },
+  { left: '30%', top: '84%', size: 13, delay: 0.9, dur: 3.4, color: '#e07a5f' },
+  { left: '74%', top: '88%', size: 16, delay: 1.4, dur: 2.7, color: '#f2b8b8' },
+  { left: '4%', top: '88%', size: 12, delay: 2.2, dur: 3.1, color: '#d9a441' },
+  { left: '94%', top: '84%', size: 13, delay: 0.5, dur: 2.5, color: '#e8b79e' },
+];
+---
+
+<div class="glitter" aria-hidden="true">
+  {
+    sparkles.map((s) => (
+      <svg
+        class="glitter-sparkle"
+        style={`left:${s.left}; top:${s.top}; width:${s.size}px; color:${s.color}; animation-delay:${s.delay}s; animation-duration:${s.dur}s;`}
+        viewBox="0 0 24 24"
+      >
+        <path d="M12 0c1.4 6.4 5.6 10.6 12 12-6.4 1.4-10.6 5.6-12 12-1.4-6.4-5.6-10.6-12-12 6.4-1.4 10.6-5.6 12-12z" fill="currentColor" />
+      </svg>
+    ))
+  }
+</div>

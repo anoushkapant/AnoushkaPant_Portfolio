@@ -1,5 +1,6 @@
 ---
 import '~/styles/global.css';
+import Glitter from '~/components/Glitter.astro';
 import { withBase } from '~/lib/paths';
 import type { Props } from 'astro';
 
@@ -20,7 +21,7 @@ const bodyClass = [clean ? 'clean' : null, typewriter ? 'typewriter' : null].fil
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="icon" type="image/png" href={withBase('/uploads/stickers/sticker6-flower-pink.png')} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -31,6 +32,7 @@ const bodyClass = [clean ? 'clean' : null, typewriter ? 'typewriter' : null].fil
   </head>
   <body class:list={bodyClass}>
     <a class="skip-link" href="#main">Skip to content</a>
+    <Glitter />
     <header class="site-nav">
       <a class="brand" href={withBase('/')}>
         <img

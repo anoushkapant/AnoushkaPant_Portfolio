@@ -1,5 +1,5 @@
 ---
-title: "Creative Work 2"
+title: "Sunset Cat, Sunflower, Sunset Painting (Original + Fanart)"
 date: 2026-02-12
 type: creative
 featured: false

@@ -1,5 +1,5 @@
 ---
-title: "Creative Work 3"
+title: "Sunflower Cat Embroidery (Original)"
 date: 2026-02-14
 type: creative
 featured: false

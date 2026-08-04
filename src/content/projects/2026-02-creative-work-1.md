@@ -1,5 +1,5 @@
 ---
-title: "Creative Work 1"
+title: "Tian Guan Ci Fu (Fanart)"
 date: 2026-02-10
 type: creative
 featured: true

@@ -1,5 +1,5 @@
 ---
-title: "Creative Work 4"
+title: "Venti — The Tone-Deaf Bard (Genshin Impact Fanart)"
 date: 2026-02-16
 type: creative
 featured: false
