@@ -71,23 +71,29 @@ const adminHref = withBase('/admin/stickers');
   const isImageSticker = (s: Sticker) => isImage(s.emoji);
 
   async function loadStickers() {
-    let loaded: LocalSticker[];
-    if (!supabase) {
-      try {
-        const raw = localStorage.getItem(LOCAL_KEY);
-        loaded = raw ? (JSON.parse(raw) as LocalSticker[]) : [];
-      } catch {
-        loaded = [];
-      }
-    } else {
-      const { data } = await supabase
-        .from('stickers')
-        .select('*')
-        .order('created_at', { ascending: true })
-        .limit(MAX_STICKERS);
-      loaded = (data ?? []) as Sticker[];
+    let local: LocalSticker[] = [];
+    try {
+      const raw = localStorage.getItem(LOCAL_KEY);
+      local = raw ? (JSON.parse(raw) as LocalSticker[]) : [];
+    } catch {
+      local = [];
     }
-    stickers = loaded.filter(isImageSticker);
+    local = local.map((s) => ({ ...s, local: true }));
+
+    if (!supabase) {
+      stickers = local.filter(isImageSticker);
+      render();
+      return;
+    }
+    const { data } = await supabase
+      .from('stickers')
+      .select('*')
+      .order('created_at', { ascending: true })
+      .limit(MAX_STICKERS);
+    const cloud = ((data ?? []) as Sticker[]).filter(isImageSticker);
+    const cloudIds = new Set(cloud.map((s) => s.id));
+    const keptLocal = local.filter((s) => !cloudIds.has(s.id));
+    stickers = [...keptLocal, ...cloud];
     render();
   }
 
@@ -227,6 +233,11 @@ const adminHref = withBase('/admin/stickers');
       const { x, y } = posFromEvent(e);
       void move(s, x, y);
     });
+    el.addEventListener('pointercancel', () => {
+      if (!dragging) return;
+      dragging = false;
+      el.classList.remove('dragging');
+    });
   }
 
   function attachTrayDrag() {
@@ -272,6 +283,17 @@ const adminHref = withBase('/admin/stickers');
           const { x, y } = posFromEvent(e);
           void place(src, x, y);
         }
+      });
+      btn.addEventListener('pointercancel', () => {
+        armed = false;
+        ghost?.remove();
+        ghost = null;
+      });
+      btn.addEventListener('lostpointercapture', () => {
+        if (!armed) return;
+        armed = false;
+        ghost?.remove();
+        ghost = null;
       });
     });
   }
