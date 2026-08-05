@@ -575,6 +575,26 @@ body.typewriter .skill-box li {
 .tape[data-pos='top-right'] { top: -14px; right: 8%; transform: rotate(6deg); }
 .tape[data-pos='top-center'] { top: -14px; left: 50%; margin-left: -55px; transform: rotate(-2deg); }
 
+/* ---------- page background tape ---------- */
+.tape[data-pos='page-top-left'] {
+  position: fixed;
+  top: 6px;
+  left: 4px;
+  width: 150px;
+  height: 34px;
+  transform: rotate(-35deg);
+  z-index: 0;
+}
+.tape[data-pos='page-top-right'] {
+  position: fixed;
+  top: 6px;
+  right: 4px;
+  width: 150px;
+  height: 34px;
+  transform: rotate(35deg);
+  z-index: 0;
+}
+
 /* ---------- featured ---------- */
 .featured-section {
   position: relative;
